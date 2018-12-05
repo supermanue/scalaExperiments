@@ -1,4 +1,4 @@
-this is where I do my small experiments with the things I want to learn in Scala.
+this is where I do my small experiments with the things I want to learn in Scala. 
 
 Index:
 - CatsIO: functional IO monad
