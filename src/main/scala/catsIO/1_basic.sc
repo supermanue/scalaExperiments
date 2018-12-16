@@ -1,4 +1,3 @@
-//TODO EN DESARROLLO
 // en build.sbt: libraryDependencies += "org.typelevel" %% "cats-effect" % "1.0.0"
 
 import cats.effect.IO
