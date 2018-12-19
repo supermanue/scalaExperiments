@@ -1,4 +1,5 @@
 //An Iso is an optic which converts elements of type S into elements of type A without loss.
+//http://julien-truffaut.github.io/Monocle/
 
 /*
 val monocleVersion = "1.5.0" // 1.5.0-cats based on cats 1.0.x
@@ -32,3 +33,14 @@ val res2 = personToTuple.reverseGet(tuplePerson)
 
 
 //TEST: ver que cumple las IsoLaws. Se prueba con IsoTests
+/*
+- construir un Generator
+- https://github.com/julien-truffaut/Monocle/blob/master/example/src/test/scala/monocle/LensExample.scala
+
+- aqui se explica un poco
+http://julien-truffaut.github.io/Monocle/optics/lens.html
+
+- aquí tb
+https://stackoverflow.com/questions/33709435/how-can-i-use-monocles-built-in-law-implementations-to-test-my-own-lenses
+
+*/
