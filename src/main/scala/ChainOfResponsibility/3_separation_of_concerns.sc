@@ -1,43 +1,49 @@
 case class Event(level: Int, title: String)
 
 //Base handler class
-trait Handler[E, T] {
-
-  //quizá todos estos val no deberían existir y ser parámetros
-  // de la función handleEvent, pero eso da un montón de problemas por otro lado
-  val successor: Option[Handler[E, T]]
-  val finalState: T
-  val condition: E=> Boolean
-  val handle: E => T
-
-  final def handleEvent(event: E): T =
-    if (condition (event))
-      handle(event)
-    else
-      successor.fold(finalState)(_.handleEvent(event))
+trait Handler[E,T] {
+  def condition(event:E): Boolean
+  def handle (event: E): T
 }
 
-case class GenericHandler(
-  successor: Option[Handler[Event, String]],
-  finalState: String,
-  condition: Event=>Boolean,
-  handle: Event=> String) extends Handler[Event, String]
+trait GenericHandler[E,T] extends Handler[E,T] {
+  val successor: Handler[E,T]
+  def condition (event: E): Boolean
+  def handleFun (event: E): T
 
+  def handle(event: E): T =
+    if (condition (event))
+      handleFun(event)
+    else
+      successor.handle(event)
+}
 
-//TODO lo que me preocupa ahora es cómo inicializar esto
-//aqui se mezcla lógica de negocio con inicialización, es muy muy chungo
+trait GenericStopHandler[E,T] extends Handler[E,T] {
+  def condition(event:E): Boolean= true
+  def handle (event:E): T
+}
+
+trait Handler1 extends GenericHandler[Event, String]{
+  def condition (event: Event): Boolean = event.level == 1
+  def handleFun (event: Event): String = "Level1Handler handling: " + event.title
+}
+
+trait Handler2 extends GenericHandler[Event, String]{
+  def condition (event: Event): Boolean = event.level ==2
+  def handleFun (event: Event): String = "Level2Handler handling: " + event.title
+}
+
+trait StopHandler extends GenericStopHandler[Event, String]{
+  def handle(event: Event):  String = new String("This is error")
+}
+
 
 object chainOfResponsibility {
-  val level2 = GenericHandler(None, "Level 2: could not handle",
-    event => event.level ==2,
-    event =>"Level2Handler handling: " + event.title)
+  object Handler1 extends Handler1{val successor = Handler2}
+  object Handler2 extends Handler2{val successor = Stop}
+  object Stop extends StopHandler
 
-  val level1 = GenericHandler(Some(level2),
-    "level1: could not handle",
-    event => event.level ==1,
-    event =>"Level1Handler handling: " + event.title)
-
-  def handleEvent(event: Event): String = level1.handleEvent(event)
+  def handle(event: Event): String = Handler1.handle(event)
 
 }
 
@@ -46,6 +52,6 @@ val event2 = Event(2, "event 2")
 val event3 = Event(3, "event 3")
 
 
-println(chainOfResponsibility.handleEvent(event1))
-println(chainOfResponsibility.handleEvent(event2))
-println(chainOfResponsibility.handleEvent(event3))
+println(chainOfResponsibility.handle(event1))
+println(chainOfResponsibility.handle(event2))
+println(chainOfResponsibility.handle(event3))
