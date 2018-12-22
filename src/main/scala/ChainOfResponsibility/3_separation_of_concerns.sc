@@ -1,7 +1,8 @@
 case class Event(level: Int, title: String)
 
 //Base handler class
-trait Handler[E,T] {
+//Sealed because both possible types (generic and stop) are implemented here
+sealed trait Handler[E,T] {
   def condition(event:E): Boolean
   def handle (event: E): T
 }
