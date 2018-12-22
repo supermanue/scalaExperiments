@@ -35,7 +35,7 @@ trait Handler2 extends GenericHandler[Event, String]{
 }
 
 trait StopHandler extends GenericStopHandler[Event, String]{
-  def handle(event: Event):  String = new String("This is error")
+  def handle(event: Event):  String = "This is error"
 }
 
 
