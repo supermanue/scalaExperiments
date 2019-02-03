@@ -3,8 +3,10 @@
 
 //libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.14.0" % "test"
 
-//esto está rojo pero funciona (¿?)
 import org.scalacheck.Prop.forAll
+import org.scalacheck.Gen
+import org.scalacheck._
+import org.scalacheck.Arbitrary.arbitrary
 
 
 //con forAll defines una propiedad que tienen que pasar todos
@@ -13,11 +15,6 @@ val propConcatLists = forAll { (l1: List[Int], l2: List[Int]) =>
 
 propConcatLists.check
 
-
-//generator: genera entradas para una case class
-import org.scalacheck.Gen._
-import org.scalacheck._
-import org.scalacheck.Arbitrary.arbitrary
 
 //prueba con una iso
 import monocle.Iso
@@ -39,13 +36,48 @@ val correctIso = forAll(genPerson){ person =>
 
 correctIso.check
 
+
+
+//// GENERADORES
+
+//Hay un montón de ejemplos aquí:
+//https://www.programcreek.com/scala/org.scalacheck.Gen
 //el uso de generadores sirve para evitar situaciones como esta
-val propShortList = forAll { (l1: List[Int], l2: List[Int]) =>
+val propShortList = forAll { l1: List[Int] =>
   l1.size < 100 }
 propShortList.check
 
+//numeros positivos
+val smallInteger = Gen.choose(0,10)
 
-//se pueden agrupar
+val propInteger = Prop.forAll { n: Int =>
+  n >= 0 && n <= 10
+}
+
+propInteger.check
+
+val propSmallInteger = Prop.forAll(smallInteger) { n =>
+  n >= 0 && n <= 10
+}
+
+propSmallInteger.check
+
+
+//TODO FALTA GENERADOR DE string largas
+/*
+val longList= arbitrary[List[Int]]
+val longListGenerator = for {
+  n <- Gen.choose(1,500)
+  cs <- Gen.collectionOfN[Array](n, arbitrary[Char])
+} yield new String(cs, "utf-8")
+
+val correctedPropShortList = forAll(longListGenerator) { l1 =>
+  println(l1)
+  l1.size < 100 }
+correctedPropShortList.check
+*/
+
+//agrupación de tests
 object StringSpecification extends Properties("String") {
 
   property("startsWith") = forAll { (a: String, b: String) =>

@@ -9,11 +9,12 @@ Index:
 6. Scalaz IOEffect: another IO library. This is on an ongoing work
 7. StateMachineWithTypes: creating a state machine with Data Types. 
 8. TypeClasses: adding functionality to existing classes. Includes polymorphism 
-
+9. SerialToFutureToIO: learning different functionalities of Monads with a simple example
 
 Things to learn at some point: 
 
-- ScalaCheck: restriction on input data generation (age > 0 and so)
+- ScalaCheck: generate long strings // get more fluent with generators
 - Free monads VS Tagless final
 - Finish the Scalaz IO
 - Testing on Monocle: how to demonstrate isomorphism on transformations?
+- SerialToFutureToIO: document behavior
